@@ -1,4 +1,5 @@
-package py.edu.ucom.controllers;
+
+package ucom.py.controllers;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -13,29 +14,28 @@ import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import py.edu.ucom.entities.HolaMundo;
-import py.edu.ucom.entities.apiresponse.Gastos;
-import py.edu.ucom.model.response.ApiResponse;
-import py.edu.ucom.services.api.ApiResponseService;
-import py.edu.ucom.services.api.GenericDaoServiceWithJason;
+import ucom.py.entities.HolaMundo;
+import ucom.py.entities.apiresponse.Gastos;
+import ucom.py.model.response.ApiResponse;
+import ucom.py.services.api.ApiResponseService;
+import ucom.py.services.api.GenericDAOServicesWithJson;
 
-@Path("/api-example")
+@Path("/api-examples")
 public class ApiResponseResource {
     @Inject
     private ApiResponseService servicioConInject;
 
-    private final GenericDaoServiceWithJason serviceConConstructor;
+    private GenericDAOServicesWithJson serviceConConstructor;
 
-    public ApiResponseResource(GenericDaoServiceWithJason instanciaService) {
+    public ApiResponseResource(GenericDAOServicesWithJson instanciaService) {
         this.serviceConConstructor = instanciaService;
     }
- 
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String recursoBasicoTest() {
         return "Se crea un nuevo recurso en OpenApi";
     }
-
     @GET
     @Path("clase-generica")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -52,41 +52,13 @@ public class ApiResponseResource {
         respuesta.setData(hm);
         return respuesta;
     }
-
-    @GET
-    @Path("clase-generica/path-param/{id}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.APPLICATION_JSON)
-    public ApiResponse<Integer> retornoDeClaseGenericaConError(
-            @PathParam("id") Integer id) {
-        @SuppressWarnings({ "rawtypes", "unchecked" })
-        ApiResponse<Integer> respuesta = new ApiResponse();
-        System.out.println(id);
-        try {
-            if (id == 2) {
-                throw new Exception("se nos fue de las manos");
-            }
-            respuesta.setCode(Response.Status.OK.getStatusCode());
-            respuesta.setMessage("Primer mensaje");
-            respuesta.setData(id);
-        } catch (Exception e) {
-            // TODO: handle exception
-
-            respuesta.setCode(Response.Status.CONFLICT.getStatusCode());
-            respuesta.setMessage("Primer error");
-            respuesta.setData(id);
-        }
-
-        return respuesta;
-    }
-
     @GET
     @Path("clase-generica/service/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public ApiResponse<String> retornoDeClaseGenericaConServicio(
             @PathParam("id") Integer id) {
-        @SuppressWarnings({ "unchecked", "rawtypes" })
+        @SuppressWarnings({ "rawtypes", "unchecked" })
         ApiResponse<String> respuesta = new ApiResponse();
         System.out.println(id);
         try {
@@ -97,7 +69,6 @@ public class ApiResponseResource {
             respuesta.setMessage("Service message");
             respuesta.setData(servicioConInject.responseDummy());
         } catch (Exception e) {
-
             respuesta.setCode(Response.Status.CONFLICT.getStatusCode());
             respuesta.setMessage("Primer error");
             respuesta.setData(e.getMessage());
@@ -129,14 +100,12 @@ public class ApiResponseResource {
         return respuesta;
     }
 
-
-    @SuppressWarnings("rawtypes")
     @POST
     @Path("gastos/json")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public ApiResponse<Gastos> agregarGastos(Gastos param) {
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings({ "rawtypes", "unchecked" })
         ApiResponse<Gastos> respuesta = new ApiResponse();
         try {
             respuesta.setCode(Response.Status.OK.getStatusCode());
