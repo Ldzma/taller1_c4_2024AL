@@ -24,12 +24,12 @@ public class ApiResponseResource {
     @Inject
     private ApiResponseService servicioConInject;
 
-    private final GenericDaoServiceWithJason serviceConConstructor;
+    private GenericDaoServiceWithJason serviceConConstructor;
 
     public ApiResponseResource(GenericDaoServiceWithJason instanciaService) {
         this.serviceConConstructor = instanciaService;
     }
- 
+
     @GET
     @Produces(MediaType.TEXT_PLAIN)
     public String recursoBasicoTest() {
@@ -41,7 +41,6 @@ public class ApiResponseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public ApiResponse<HolaMundo> retornoDeClaseGenerica() {
-        @SuppressWarnings({ "rawtypes", "unchecked" })
         ApiResponse<HolaMundo> respuesta = new ApiResponse();
         respuesta.setCode(200);
         respuesta.setMessage("Primer mensaje");
@@ -59,7 +58,6 @@ public class ApiResponseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public ApiResponse<Integer> retornoDeClaseGenericaConError(
             @PathParam("id") Integer id) {
-        @SuppressWarnings({ "rawtypes", "unchecked" })
         ApiResponse<Integer> respuesta = new ApiResponse();
         System.out.println(id);
         try {
@@ -70,8 +68,7 @@ public class ApiResponseResource {
             respuesta.setMessage("Primer mensaje");
             respuesta.setData(id);
         } catch (Exception e) {
-            // TODO: handle exception
-
+          
             respuesta.setCode(Response.Status.CONFLICT.getStatusCode());
             respuesta.setMessage("Primer error");
             respuesta.setData(id);
@@ -86,7 +83,6 @@ public class ApiResponseResource {
     @Produces(MediaType.APPLICATION_JSON)
     public ApiResponse<String> retornoDeClaseGenericaConServicio(
             @PathParam("id") Integer id) {
-        @SuppressWarnings({ "unchecked", "rawtypes" })
         ApiResponse<String> respuesta = new ApiResponse();
         System.out.println(id);
         try {
@@ -111,7 +107,6 @@ public class ApiResponseResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public ApiResponse<List<Gastos>> listarGastos() {
-        @SuppressWarnings({ "rawtypes", "unchecked" })
         ApiResponse<List<Gastos>> respuesta = new ApiResponse();
         List<Gastos> lista = new ArrayList<>();
         try {
@@ -129,14 +124,11 @@ public class ApiResponseResource {
         return respuesta;
     }
 
-
-    @SuppressWarnings("rawtypes")
     @POST
     @Path("gastos/json")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     public ApiResponse<Gastos> agregarGastos(Gastos param) {
-        @SuppressWarnings("unchecked")
         ApiResponse<Gastos> respuesta = new ApiResponse();
         try {
             respuesta.setCode(Response.Status.OK.getStatusCode());
